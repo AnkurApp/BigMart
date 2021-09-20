@@ -1,4 +1,5 @@
 import {
+  USER_EDIT,
   USER_LOGIN_FAILURE,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
@@ -10,6 +11,9 @@ const initialState = {
   email: "",
   uid: "",
   authenticated: "",
+  phoneNo: "",
+  photoURL: "",
+  city: "",
   error: null,
 };
 
@@ -38,6 +42,7 @@ export default function authReducer(state = initialState, action) {
         ...state,
         ...action.payLoad.user,
       };
+      break;
     }
 
     case USER_LOGOUT_SUCCESS: {
@@ -45,6 +50,15 @@ export default function authReducer(state = initialState, action) {
         ...state,
         authenticated: "",
       };
+      break;
+    }
+
+    case USER_EDIT: {
+      state = {
+        ...state,
+        ...action.payLoad.userDetails,
+      };
+      break;
     }
 
     default:

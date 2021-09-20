@@ -7,6 +7,8 @@ import {
   Typography,
 } from "@material-ui/core";
 
+import bgImage from "../Assets/alexandra-gorn-JIUjvqe2ZHg-unsplash.jpg";
+
 import Cards from "../Components/Cards";
 import { NavLink } from "react-router-dom";
 import { register } from "../Redux/Actions/AuthActions";
@@ -17,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 const useStyles = makeStyles({
   mainContainer: {
     width: "100%",
-    backgroundColor: "#000",
+    background: `linear-gradient(rgba(0,0,0, 0.5), rgba(0,0,0,0.4)), url(${bgImage}) no-repeat center center/cover`,
     minHeight: "100vh",
     padding: "3rem 0",
     position: "relative",

@@ -4,26 +4,28 @@ import {
   signInWithEmailAndPassword,
   onIdTokenChanged,
 } from "firebase/auth";
-import { auth, database } from "../../firebase";
-import { set, ref } from "firebase/database";
+import { auth as dbAuth, database } from "../../firebase";
+import { set, ref, update } from "firebase/database";
 
 import {
   USER_LOGIN_FAILURE,
   USER_LOGIN_SUCCESS,
   USER_SESSION,
   USER_LOGOUT_SUCCESS,
+  USER_EDIT,
 } from "./actionNames";
 
 export const register = (user) => {
   return (dispatch) => {
-    createUserWithEmailAndPassword(auth, user.email, user.password).then(
+    createUserWithEmailAndPassword(dbAuth, user.email, user.password).then(
       (userData) => {
-        updateProfile(auth.currentUser, {
+        console.log(userData, "userData");
+        updateProfile(dbAuth.currentUser, {
           displayName: user.name,
         })
           .then(() => {
             set(ref(database, `Users/${userData.user.uid}`), {
-              username: user.name,
+              name: user.name,
               email: user.email,
               uid: userData.user.uid,
               createdAt: new Date(),
@@ -56,16 +58,17 @@ export const register = (user) => {
 
 export const signIn = ({ email, password }) => {
   return (dispatch) => {
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(dbAuth, email, password)
       .then((userData) => {
         console.log(userData, "userData");
         const loggedUser = {
           name: userData.user.displayName,
           uid: userData.user.uid,
           email: userData.user.email,
+          phoneNo: userData.user.phoneNumber,
         };
 
-        auth.currentUser.getIdToken().then((token) => {
+        dbAuth.currentUser.getIdToken().then((token) => {
           console.log(token);
           localStorage.setItem("userToken", JSON.stringify(token));
         });
@@ -88,10 +91,9 @@ export const signIn = ({ email, password }) => {
 
 export const Logout = () => {
   return (dispatch) => {
-    auth
+    dbAuth
       .signOut()
       .then(() => {
-        console.log("jhd");
         localStorage.clear();
         dispatch({
           type: USER_LOGOUT_SUCCESS,
@@ -105,7 +107,7 @@ export const Logout = () => {
 
 export const userSession = () => {
   return (dispatch) => {
-    onIdTokenChanged(auth, (userInfo) => {
+    onIdTokenChanged(dbAuth, (userInfo) => {
       if (userInfo) {
         let user = {
           name: userInfo.displayName,
@@ -113,12 +115,29 @@ export const userSession = () => {
           email: userInfo.email,
           authenticated: "LOGGEDIN",
         };
-        console.log(user, "sess");
         dispatch({
           type: USER_SESSION,
           payLoad: { user },
         });
       }
+    });
+  };
+};
+
+export const userEdit = (userDetails, auth) => {
+  console.log(userDetails, "uD");
+  console.log(userDetails.number, "unum");
+  return (dispatch) => {
+    updateProfile(dbAuth.currentUser, {
+      phoneNumber: userDetails.number,
+    });
+    update(ref(database, `Users/${auth.uid}`), {
+      ...userDetails,
+    });
+
+    dispatch({
+      type: USER_EDIT,
+      payLoad: { userDetails },
     });
   };
 };

@@ -1,11 +1,13 @@
 import { Box, makeStyles, Typography } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
+import bgImage from "../Assets/alexandra-gorn-JIUjvqe2ZHg-unsplash.jpg";
+import ProductCard from "../Components/productCard";
 
 const useStyles = makeStyles({
   mainContainer: {
     width: "100%",
-    minHeight: "100vh",
-    backgroundColor: "#000",
+    height: "100vh",
+    background: `linear-gradient(rgba(0,0,0, 0.5), rgba(0,0,0,0.4)), url(${bgImage}) no-repeat center center/cover`,
     position: "relative",
   },
 
@@ -25,6 +27,7 @@ const useStyles = makeStyles({
     color: "#fff",
     letterSpacing: "1px",
     fontWeight: "bold",
+    textAlign: "center",
   },
 
   link: {
@@ -42,7 +45,7 @@ const useStyles = makeStyles({
   verticalLine: {
     width: "60px",
     minHeight: "100vh",
-    backgroundColor: "#C3073F",
+    backgroundColor: "rgb(195, 7 ,63)",
     position: "absolute",
     right: "320px",
   },
@@ -64,7 +67,9 @@ export default function LandingPage() {
           {"Register"}
         </NavLink>
       </Box>
-      <Box className={classes.verticalLine}></Box>
+      {/* <Box className={classes.verticalLine}></Box> */}
+
+      <ProductCard />
     </Box>
   );
 }

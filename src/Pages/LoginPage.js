@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import bgImage from "../Assets/alexandra-gorn-JIUjvqe2ZHg-unsplash.jpg";
+
 import {
   Box,
   makeStyles,
@@ -16,7 +18,7 @@ import { Redirect } from "react-router";
 const useStyles = makeStyles({
   mainContainer: {
     width: "100%",
-    backgroundColor: "#000",
+    background: `linear-gradient(rgba(0,0,0, 0.5), rgba(0,0,0,0.4)), url(${bgImage}) no-repeat center center/cover`,
     minHeight: "100vh",
     padding: "3rem 0",
     position: "relative",
