@@ -4,8 +4,10 @@ import {
   signInWithEmailAndPassword,
   onIdTokenChanged,
 } from "firebase/auth";
-import { auth as dbAuth, database } from "../../firebase";
-import { set, ref, update } from "firebase/database";
+import { auth as dbAuth, database, storage } from "../../firebase";
+import { set, ref, update, onValue } from "firebase/database";
+
+import { ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import {
   USER_LOGIN_FAILURE,
@@ -13,13 +15,14 @@ import {
   USER_SESSION,
   USER_LOGOUT_SUCCESS,
   USER_EDIT,
+  USER_DP,
+  UPDATE_NUMBER,
 } from "./actionNames";
 
 export const register = (user) => {
   return (dispatch) => {
     createUserWithEmailAndPassword(dbAuth, user.email, user.password).then(
       (userData) => {
-        console.log(userData, "userData");
         updateProfile(dbAuth.currentUser, {
           displayName: user.name,
         })
@@ -28,24 +31,27 @@ export const register = (user) => {
               name: user.name,
               email: user.email,
               uid: userData.user.uid,
-              createdAt: new Date(),
+              createdAt: +new Date(),
             });
           })
           .then(() => {
-            console.log("User added");
+            dbAuth.currentUser.getIdToken().then((token) => {
+              console.log(token);
+              localStorage.setItem("userToken", JSON.stringify(token));
+            });
+
             const userDetails = {
               name: user.name,
               email: user.email,
               uid: userData.user.uid,
             };
-            localStorage.setItem("User", JSON.stringify(userDetails));
+
             dispatch({
               type: USER_LOGIN_SUCCESS,
               payLoad: { user: userDetails },
             });
           })
           .catch((err) => {
-            console.log(err);
             dispatch({
               type: USER_LOGIN_FAILURE,
               payLoad: { err },
@@ -60,23 +66,18 @@ export const signIn = ({ email, password }) => {
   return (dispatch) => {
     signInWithEmailAndPassword(dbAuth, email, password)
       .then((userData) => {
-        console.log(userData, "userData");
-        const loggedUser = {
-          name: userData.user.displayName,
-          uid: userData.user.uid,
-          email: userData.user.email,
-          phoneNo: userData.user.phoneNumber,
-        };
+        const dbRef = ref(database, `Users/${userData.user.uid}`);
+        onValue(dbRef, (snapshot) => {
+          const userData = snapshot.val();
 
-        dbAuth.currentUser.getIdToken().then((token) => {
-          console.log(token);
-          localStorage.setItem("userToken", JSON.stringify(token));
-        });
-        localStorage.setItem("User", JSON.stringify(loggedUser));
+          dbAuth.currentUser.getIdToken().then((token) => {
+            localStorage.setItem("userToken", JSON.stringify(token));
+          });
 
-        dispatch({
-          type: USER_LOGIN_SUCCESS,
-          payLoad: { user: loggedUser },
+          dispatch({
+            type: USER_LOGIN_SUCCESS,
+            payLoad: { user: userData },
+          });
         });
       })
       .catch((error) => {
@@ -109,15 +110,17 @@ export const userSession = () => {
   return (dispatch) => {
     onIdTokenChanged(dbAuth, (userInfo) => {
       if (userInfo) {
-        let user = {
-          name: userInfo.displayName,
-          uid: userInfo.uid,
-          email: userInfo.email,
-          authenticated: "LOGGEDIN",
-        };
-        dispatch({
-          type: USER_SESSION,
-          payLoad: { user },
+        const dbRef = ref(database, `Users/${userInfo.uid}`);
+        onValue(dbRef, (snapshot) => {
+          const userData = snapshot.val();
+          let user = {
+            ...userData,
+            authenticated: "LOGGEDIN",
+          };
+          dispatch({
+            type: USER_SESSION,
+            payLoad: { user },
+          });
         });
       }
     });
@@ -125,12 +128,7 @@ export const userSession = () => {
 };
 
 export const userEdit = (userDetails, auth) => {
-  console.log(userDetails, "uD");
-  console.log(userDetails.number, "unum");
   return (dispatch) => {
-    updateProfile(dbAuth.currentUser, {
-      phoneNumber: userDetails.number,
-    });
     update(ref(database, `Users/${auth.uid}`), {
       ...userDetails,
     });
@@ -138,6 +136,41 @@ export const userEdit = (userDetails, auth) => {
     dispatch({
       type: USER_EDIT,
       payLoad: { userDetails },
+    });
+  };
+};
+
+export const updateUserPicture = (auth, file) => {
+  return (dispatch) => {
+    const storageRef = strRef(storage);
+    const imageRef = strRef(storageRef, `${auth.uid}`);
+
+    uploadBytes(imageRef, file).then((snapshot) => {
+      console.log(snapshot);
+
+      getDownloadURL(strRef(imageRef)).then((url) => {
+        update(ref(database, `Users/${auth.uid}`), {
+          photoURL: url,
+        });
+
+        dispatch({
+          type: USER_DP,
+          payLoad: { url },
+        });
+      });
+    });
+  };
+};
+
+export const updateNumber = (auth, number) => {
+  return (dispatch) => {
+    update(ref(database, `Users/${auth.uid}`), {
+      phoneNo: number,
+    });
+
+    dispatch({
+      type: UPDATE_NUMBER,
+      payLoad: { number },
     });
   };
 };

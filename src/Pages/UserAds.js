@@ -2,6 +2,7 @@ import { makeStyles, Box, Typography } from "@material-ui/core";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../Components/Navbar";
+import SellCard from "../Components/sellproductCard";
 import { getUserProduct } from "../Redux/Actions/productActions";
 
 const useStyles = makeStyles({
@@ -17,16 +18,6 @@ export default function UserAds() {
   const auth = useSelector((state) => state.auth);
   const { products } = useSelector((state) => state.products);
 
-  // console.log(products, "pro");
-  // products && console.log(Object.values(products), "val");
-
-  // let category = [];
-  // if (products) {
-  //   category = Object.keys(products);
-  // }
-
-  // console.log(category);
-
   useEffect(() => {
     dispatch(getUserProduct(auth.uid));
   }, []);
@@ -36,9 +27,16 @@ export default function UserAds() {
 
       <Box className={classes.adsContainer}>
         <Typography>{"Your Ads"}</Typography>
-        {/* {products &&
-         
-          })} */}
+        {products.map((product, index) => {
+          return (
+            <Box key={index}>
+              <Typography>{Object.keys(product)[0]}</Typography>
+              {product[Object.keys(product)[0]].map((ads, ind) => {
+                return <SellCard data={ads} key={ind} />;
+              })}
+            </Box>
+          );
+        })}
       </Box>
     </Box>
   );

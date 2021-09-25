@@ -2,7 +2,7 @@ import { makeStyles, Box, Avatar, List, ListItem } from "@material-ui/core";
 import { useState } from "react";
 
 import { Logout } from "../Redux/Actions/AuthActions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -40,13 +40,19 @@ export default function UserSelect() {
   const classes = useStyles();
   const [displaySelect, setDisplaySelect] = useState(false);
 
+  const auth = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   return (
     <Box
       className={classes.selectContainer}
       onClick={() => setDisplaySelect(!displaySelect)}
     >
-      <Avatar src="/broken-image.jpg" />
+      {auth.photoURL ? (
+        <Avatar src={auth.photoURL} alt={auth.name} />
+      ) : (
+        <Avatar src="/broken-image.jpg" />
+      )}
 
       <Box
         className={classes.optionsOuterContainer}

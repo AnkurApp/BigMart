@@ -68,7 +68,7 @@ const getSteps = () => {
   return ["Product Details", "User Details", "Product Images"];
 };
 
-const getStepContent = (step) => {
+const getStepContent = (step, images, setImages) => {
   switch (step) {
     case 0:
       return <ProductDetailsForm />;
@@ -77,7 +77,7 @@ const getStepContent = (step) => {
       return <UserDetailsForm />;
 
     case 2:
-      return <ImagesForm />;
+      return <ImagesForm images={images} setImages={setImages} />;
 
     default:
       return "Unknown Step";
@@ -89,6 +89,12 @@ export default function StepperForm({ setModalOpen }) {
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
 
+  const [images, setImages] = useState({
+    image1: null,
+    image2: null,
+    image3: null,
+  });
+
   const auth = useSelector((state) => state.auth);
 
   const methods = useForm({
@@ -99,11 +105,9 @@ export default function StepperForm({ setModalOpen }) {
       productPrice: "",
       userName: auth.name,
       userEmail: auth.email,
-      phoneNo: "",
+      useruid: auth.uid,
+      phoneNo: auth.phoneNo,
       sellerCity: "",
-      Image1: "",
-      Image2: "",
-      Image3: "",
     },
   });
 
@@ -112,14 +116,15 @@ export default function StepperForm({ setModalOpen }) {
   };
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    setTimeout(() => {
+      setActiveStep(activeStep + 1);
+    }, 500);
   };
 
   const uploadImage = (file, imagesRef, data, randomId, auth) => {
     uploadBytes(imagesRef, file.image).then((snapshot) => {
-      console.log("Uploaded");
+      console.log(snapshot);
       getDownloadURL(strRef(imagesRef)).then((url) => {
-        console.log(url);
         update(ref(database, `Sell/${data.productCategory}/${randomId}`), {
           [file.name]: url,
         });
@@ -145,24 +150,28 @@ export default function StepperForm({ setModalOpen }) {
       ref(database, `Products/${auth.uid}/${data.productCategory}/${randomId}`),
       {
         ...uploadData,
+        itemId: randomId,
       }
     );
     set(ref(database, `Sell/${data.productCategory}/${randomId}`), {
       ...uploadData,
+      itemId: randomId,
     });
+
     const imageArray = [
-      { image: data.Image1, name: "Image1" },
-      { image: data.Image2, name: "Image2" },
-      { image: data.Image3, name: "Image3" },
+      { image: images.image1, name: "Image1" },
+      { image: images.image2, name: "Image2" },
+      { image: images.image3, name: "Image3" },
     ];
     imageArray.forEach((image) => {
       const storageRef = strRef(storage);
-      const imagesRef = strRef(storageRef, `Image/${nanoid()}`);
+      const imagesRef = strRef(storageRef, `${nanoid()}`);
 
       uploadImage(image, imagesRef, data, randomId, auth);
     });
 
     setModalOpen(false);
+    setImages({ image1: null, image2: null, image3: null });
   };
 
   return (
@@ -186,7 +195,7 @@ export default function StepperForm({ setModalOpen }) {
               className={classes.formContainer}
               onSubmit={methods.handleSubmit(onSubmit)}
             >
-              {getStepContent(activeStep)}
+              {getStepContent(activeStep, images, setImages)}
               <Box className={classes.btnSection}>
                 <Button
                   className={`${classes.button} ${classes.backButton}`}
@@ -196,23 +205,27 @@ export default function StepperForm({ setModalOpen }) {
                 >
                   {"Back"}
                 </Button>
-                {activeStep === steps.length - 1 ? (
+
+                {activeStep !== steps.length - 1 ? (
                   <Button
                     className={classes.button}
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                  >
-                    {"Finish"}
-                  </Button>
-                ) : (
-                  <Button
-                    className={classes.button}
+                    type="button"
+                    id={"nextBtn"}
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
                   >
                     {"Next"}
+                  </Button>
+                ) : (
+                  <Button
+                    className={classes.button}
+                    id={"finishBtn"}
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                  >
+                    {"Finish"}
                   </Button>
                 )}
               </Box>

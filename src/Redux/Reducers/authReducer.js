@@ -1,4 +1,7 @@
 import {
+  GET_USERDATA,
+  UPDATE_NUMBER,
+  USER_DP,
   USER_EDIT,
   USER_LOGIN_FAILURE,
   USER_LOGIN_SUCCESS,
@@ -45,6 +48,14 @@ export default function authReducer(state = initialState, action) {
       break;
     }
 
+    case GET_USERDATA: {
+      state = {
+        ...state,
+        ...action.payLoad.userData,
+      };
+      break;
+    }
+
     case USER_LOGOUT_SUCCESS: {
       state = {
         ...state,
@@ -57,6 +68,22 @@ export default function authReducer(state = initialState, action) {
       state = {
         ...state,
         ...action.payLoad.userDetails,
+      };
+      break;
+    }
+
+    case USER_DP: {
+      state = {
+        ...state,
+        photoURL: action.payLoad.url,
+      };
+      break;
+    }
+
+    case UPDATE_NUMBER: {
+      state = {
+        ...state,
+        phoneNo: action.payLoad.number,
       };
       break;
     }

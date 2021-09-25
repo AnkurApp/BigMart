@@ -38,6 +38,7 @@ export default function ProductDetailsForm() {
             label="Select Category"
             variant="outlined"
             className={classes.inputField}
+           
             {...field}
           >
             <MenuItem value="sofa">{"Sofa"}</MenuItem>

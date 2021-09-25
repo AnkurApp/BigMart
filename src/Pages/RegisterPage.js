@@ -68,8 +68,8 @@ const useStyles = makeStyles({
   },
 
   btn: {
-    width: "50%",
-    padding: "0.5rem 2rem",
+    width: "67%",
+    padding: "0.5rem 1rem",
     margin: "1.5rem 0",
     backgroundColor: "#fff",
     fontSize: "20px",
