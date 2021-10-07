@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { Logout } from "../Redux/Actions/AuthActions";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   selectContainer: {
@@ -41,6 +41,7 @@ export default function UserSelect() {
   const [displaySelect, setDisplaySelect] = useState(false);
 
   const auth = useSelector((state) => state.auth);
+  const history = useHistory();
 
   const dispatch = useDispatch();
   return (
@@ -72,13 +73,19 @@ export default function UserSelect() {
           </ListItem>
 
           <ListItem className={classes.listItem}>
-            <NavLink to={"/BigMart/ads"} className={classes.link}>
+            <NavLink to={"/BigMart/Order"} className={classes.link}>
+              {"Your Orders"}
+            </NavLink>
+          </ListItem>
+
+          <ListItem className={classes.listItem}>
+            <NavLink to={"/BigMart/Cart"} className={classes.link}>
               {"Your Cart"}
             </NavLink>
           </ListItem>
 
           <ListItem className={classes.listItem}>
-            <NavLink to={"/BigMart/"} className={classes.link}>
+            <NavLink to={"/BigMart/Favorite"} className={classes.link}>
               {"Favorites"}
             </NavLink>
           </ListItem>
@@ -87,7 +94,10 @@ export default function UserSelect() {
             <NavLink
               to={"/Login"}
               className={classes.link}
-              onClick={() => dispatch(Logout())}
+              onClick={() => {
+                history.push("/");
+                dispatch(Logout());
+              }}
             >
               {"Logout"}
             </NavLink>

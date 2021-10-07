@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LandingPage from "../Pages/initialScreen";
 import LoginPage from "../Pages/LoginPage";
 import RegisterPage from "../Pages/RegisterPage";
@@ -19,6 +15,10 @@ import UserProfile from "../Pages/UserProfile";
 import UserAds from "../Pages/UserAds";
 import ProductPage from "../Pages/productPage";
 import AuthRoutes from "./authRoutes";
+import UserCart from "../Pages/CartPage";
+import UserFavorite from "../Pages/FavPage";
+import StripeContainer from "../Components/StripeContainer";
+import UserOrder from "../Pages/OrderPage";
 
 export default function Ecommerce() {
   const getToken = localStorage.getItem("userToken");
@@ -29,6 +29,7 @@ export default function Ecommerce() {
       dispatch(userSession());
     }
   }, [getToken, dispatch]);
+
   return (
     <Router>
       <Switch>
@@ -54,6 +55,10 @@ export default function Ecommerce() {
           exact
           component={ProductPage}
         />
+        <Route path="/BigMart/Cart" exact component={UserCart} />
+        <Route path="/BigMart/Order" exact component={UserOrder} />
+        <Route path="/BigMart/Favorite" exact component={UserFavorite} />
+        <Route path="/BigMart/payment" exact component={StripeContainer} />
       </Switch>
     </Router>
   );

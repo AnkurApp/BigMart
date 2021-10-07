@@ -3,12 +3,15 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Carousel from "react-elastic-carousel";
 import Navbar from "../Components/Navbar";
+import Footer from "../Components/footer";
 import SellCard from "../Components/sellproductCard";
-import { getProducts } from "../Redux/Actions/productActions";
+import { getFavProducts, getProducts } from "../Redux/Actions/productActions";
+
 const useStyles = makeStyles({
   mainContainer: {
-    marginTop: "70px",
+    marginTop: "64px",
     width: "100%",
+    // backgroundColor: "#EAEDED",
   },
 
   adsContainer: {
@@ -16,17 +19,56 @@ const useStyles = makeStyles({
   },
 
   categoryContainer: {
-    margin: "1rem 0",
+    margin: "1rem 0 2rem",
+    // border: "1px solid black",
+    backgroundColor: "#fff",
+  },
+
+  categoryName: {
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    fontSize: "20px",
+  },
+
+  carouselContainer: {
+    "& .eRmJbc": {
+      fontSize: "0.8rem",
+      boxShadow: "none",
+      backgroundColor: "transparent",
+    },
+    "& .khvUfi": {
+      fontSize: "0.8rem",
+      boxShadow: "none",
+
+      "&:hover:enabled": {
+        backgroundColor: "#C3073F",
+        boxShadow: "none",
+      },
+    },
+  },
+
+  flexBox: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "0.5rem 2rem",
   },
 });
+
 export default function HomePage() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getProducts());
   }, []);
+
+  const auth = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (auth.uid) {
+      dispatch(getFavProducts(auth.uid));
+    }
+  }, [auth.uid]);
 
   const breakPoints = [
     { width: 1, itemsToShow: 1 },
@@ -45,9 +87,13 @@ export default function HomePage() {
         {sellProducts.map((product, index) => {
           return (
             <Box className={classes.categoryContainer} key={index}>
-              <Typography className={classes.categoryName}>
-                {Object.keys(product)[0]}
-              </Typography>
+              <Box className={classes.flexBox}>
+                <Typography className={classes.categoryName}>
+                  {Object.keys(product)[0]}
+                </Typography>
+                <Typography>{"View All"}</Typography>
+              </Box>
+
               <Carousel
                 className={classes.carouselContainer}
                 breakPoints={breakPoints}
@@ -60,6 +106,8 @@ export default function HomePage() {
           );
         })}
       </Box>
+
+      <Footer />
     </Box>
   );
 }

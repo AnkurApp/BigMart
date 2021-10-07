@@ -9,27 +9,32 @@ import {
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  addToFavorite,
+  numberFormat,
+  removeFromFav,
+} from "../Redux/Actions/productActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   cardContainer: {
-    width: "80%",
+    width: "320px",
     height: "300px",
-    padding: "1rem",
-    borderLeft: "5px solid #C3073F",
-    borderRight: "5px solid #C3073F",
   },
 
   productImage: {
     display: "block",
     height: "65%",
-    
+    backgroundSize: "contain",
   },
 
   cardContent: {
     height: "35%",
-    marginTop: "0.5rem",
-    padding: "0.5rem",
+    padding: "0.5rem 1rem",
+    borderBottom: "3px solid #C3073F",
+    // borderLeft: "3px solid #C3073F",
+    // borderRight: "3px solid #C3073F",
   },
 
   flexContainer: {
@@ -39,24 +44,56 @@ const useStyles = makeStyles({
   },
 
   productData: {
+    color: "#C3073F",
     fontWeight: "bold",
-    letterSpacing: "1px",
+    letterSpacing: "0.5px",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
+
+  productPrice: {
+    fontWeight: "bold",
+  },
+
   favoriteIcon: {
     cursor: "pointer",
+  },
+
+  favRed: {
+    cursor: "pointer",
+    color: "red",
   },
 });
 export default function SellCard({ data }) {
   const classes = useStyles();
+  const auth = useSelector((state) => state.auth);
+  const { favorite } = useSelector((state) => state.products);
 
-  const [state, setState] = useState(false);
+  const [fav, setFav] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    favorite.forEach((item) => {
+      if (item.itemId === data.itemId) {
+        setFav(true);
+      }
+    });
+  }, [favorite.length]);
 
   const handleClick = () => {
-    setState(true);
+    console.log("click");
+    if (!fav) {
+      dispatch(addToFavorite(auth.uid, data));
+    } else {
+      dispatch(removeFromFav(auth.uid, data.itemId));
+      setFav(false);
+    }
   };
 
   return (
-    <Card className={classes.cardContainer}>
+    <Card className={classes.cardContainer} raised={true}>
       <Link
         to={{
           pathname: `/BigMart/${data.productCategory}/${data.productTitle}`,
@@ -75,16 +112,17 @@ export default function SellCard({ data }) {
           <Typography className={classes.productData} variant="h6">
             {data.productTitle}
           </Typography>
+
           <Box onClick={handleClick}>
-            {state ? (
-              <FavoriteIcon />
+            {fav ? (
+              <FavoriteIcon className={classes.favRed} />
             ) : (
               <FavoriteBorderIcon className={classes.favoriteIcon} />
             )}
           </Box>
         </Box>
-        <Typography className={classes.productData}>
-          {`Rs ${data.productPrice}`}
+        <Typography className={classes.productPrice}>
+          {numberFormat(data.productPrice)}
         </Typography>
 
         <Box className={classes.flexContainer}>

@@ -3,11 +3,17 @@ import {
   GET_USERPRODUCT_SUCCESS,
   GET_SELLPRODUCT_FAILURE,
   GET_SELLPRODUCT_SUCCESS,
+  GET_CART_ITEMS,
+  GET_FAV_ITEMS,
+  GET_ORDER_ITEMS,
 } from "../Actions/actionNames";
 
 const initialState = {
   products: [],
   sellProducts: [],
+  cart: [],
+  favorite: [],
+  orders: [],
   error: "",
 };
 
@@ -41,6 +47,30 @@ export default function productReducer(state = initialState, action) {
       state = {
         ...state,
         error: action.payLoad.error,
+      };
+      break;
+    }
+
+    case GET_CART_ITEMS: {
+      state = {
+        ...state,
+        cart: action.payLoad,
+      };
+      break;
+    }
+
+    case GET_FAV_ITEMS: {
+      state = {
+        ...state,
+        favorite: action.payLoad,
+      };
+      break;
+    }
+
+    case GET_ORDER_ITEMS: {
+      state = {
+        ...state,
+        orders: action.payLoad,
       };
       break;
     }

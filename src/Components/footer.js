@@ -5,7 +5,7 @@ const useStyles = makeStyles({
   footerContainer: {
     width: "100%",
     backgroundColor: "#C3073F",
-    padding: "1rem 0",
+    padding: "0.5rem 0",
     display: "flex",
     justifyContent: "space-evenly",
     alignItems: "center",

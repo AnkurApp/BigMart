@@ -18,8 +18,10 @@ import UpdateNumber from "../Modules/Updatenumber";
 
 const useStyles = makeStyles({
   mainContainer: {
-    marginTop: "100px",
+    marginTop: "64px",
+    minHeight: "93vh",
     position: "relative",
+    backgroundColor: "#EAEDED",
   },
 
   userContainer: {
@@ -66,6 +68,7 @@ const useStyles = makeStyles({
   },
 
   avatar: {
+    display: "block",
     width: "100px",
     height: "100px",
   },
@@ -86,7 +89,6 @@ const useStyles = makeStyles({
     width: "100%",
     marginTop: "1rem",
     textAlign: "center",
-    // padding: "0rem 2rem",
   },
 
   flexContainer: {
@@ -195,8 +197,6 @@ export default function UserProfile() {
             )}
           </Box>
         </Box>
-
-        {/* <Box className={classes.adsContainer}>{'y'}</Box> */}
       </Box>
 
       <EditProfile modalOpen={modalOpen} setModalOpen={setModalOpen} />
