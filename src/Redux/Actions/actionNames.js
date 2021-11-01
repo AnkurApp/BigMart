@@ -16,7 +16,10 @@ export const USER_EDIT = "USER_EDIT";
 
 export const USER_DP = "USER_DP";
 export const UPDATE_NUMBER = "UPDATE_NUMBER";
+export const UPDATE_CITY = "UPDATE_CITY";
 
 export const GET_CART_ITEMS = "GET_CART_ITEMS";
 export const GET_FAV_ITEMS = "GET_FAV_ITEMS";
 export const GET_ORDER_ITEMS = "GET_ORDER_ITEMS";
+
+export const GET_CATEGORYDATA = "GET_CATEGORYDATA";

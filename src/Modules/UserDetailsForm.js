@@ -32,6 +32,7 @@ export default function UserDetailsForm() {
             id="userName"
             label="Seller Name"
             variant="outlined"
+            required
             disabled={true}
             className={classes.inputField}
             {...field}
@@ -46,6 +47,7 @@ export default function UserDetailsForm() {
             id="userEmail"
             label="Seller Email"
             variant="outlined"
+            required
             disabled={true}
             className={classes.inputField}
             {...field}
@@ -62,6 +64,7 @@ export default function UserDetailsForm() {
             id="phoneNo"
             label="Seller Number"
             variant="outlined"
+            required
             placeholder="Enter your Number"
             className={classes.inputField}
             {...field}
@@ -81,6 +84,7 @@ export default function UserDetailsForm() {
             label="Seller City"
             variant="outlined"
             placeholder="Enter Your City"
+            required
             className={classes.inputField}
             {...field}
             error={Boolean(errors?.sellerCity)}

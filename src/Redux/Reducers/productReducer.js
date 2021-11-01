@@ -6,11 +6,13 @@ import {
   GET_CART_ITEMS,
   GET_FAV_ITEMS,
   GET_ORDER_ITEMS,
+  GET_CATEGORYDATA,
 } from "../Actions/actionNames";
 
 const initialState = {
   products: [],
   sellProducts: [],
+  categoryData: [],
   cart: [],
   favorite: [],
   orders: [],
@@ -39,6 +41,14 @@ export default function productReducer(state = initialState, action) {
       state = {
         ...state,
         sellProducts: [...action.payLoad],
+      };
+      break;
+    }
+
+    case GET_CATEGORYDATA: {
+      state = {
+        ...state,
+        categoryData: [...action.payLoad],
       };
       break;
     }

@@ -19,6 +19,9 @@ import UserCart from "../Pages/CartPage";
 import UserFavorite from "../Pages/FavPage";
 import StripeContainer from "../Components/StripeContainer";
 import UserOrder from "../Pages/OrderPage";
+import CategoryData from "../Pages/categoryDataPage";
+import UserPicture from "../Pages/UserDP";
+import PasswordChange from "../Pages/passwordChange";
 
 export default function Ecommerce() {
   const getToken = localStorage.getItem("userToken");
@@ -50,15 +53,30 @@ export default function Ecommerce() {
         <PrivateRoute path="/BigMart" exact component={HomePage} />
         <PrivateRoute path="/BigMart/user" exact component={UserProfile} />
         <PrivateRoute path="/BigMart/ads" exact component={UserAds} />
+        <PrivateRoute path="/BigMart/Cart" exact component={UserCart} />
+        <Route path="/BigMart/Order" exact component={UserOrder} />
+        <Route path="/BigMart/Favorite" exact component={UserFavorite} />
+        <PrivateRoute
+          path="/BigMart/payment"
+          exact
+          component={StripeContainer}
+        />
+        <Route path="/BigMart/user/userpicture" exact component={UserPicture} />
+        <Route
+          path="/BigMart/user/changepassword"
+          exact
+          component={PasswordChange}
+        />
+        <Route
+          path="/BigMart/Category/:category"
+          exact
+          component={CategoryData}
+        />
         <Route
           path="/BigMart/:category/:product"
           exact
           component={ProductPage}
         />
-        <Route path="/BigMart/Cart" exact component={UserCart} />
-        <Route path="/BigMart/Order" exact component={UserOrder} />
-        <Route path="/BigMart/Favorite" exact component={UserFavorite} />
-        <Route path="/BigMart/payment" exact component={StripeContainer} />
       </Switch>
     </Router>
   );

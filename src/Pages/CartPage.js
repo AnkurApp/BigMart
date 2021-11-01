@@ -6,7 +6,7 @@ import {
   Card,
   Button,
 } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CartCard from "../Components/cartCard";
 import Footer from "../Components/footer";
@@ -22,11 +22,12 @@ const useStyles = makeStyles({
     padding: "2rem",
     display: "flex",
     justifyContent: "center",
-    minHeight: "86.3vh",
+    minHeight: "88.15vh",
   },
 
   cartItemsContainer: {
     width: "60%",
+    height: "100%",
     backgroundColor: "#fff",
     padding: "1rem",
     marginRight: "2rem",
@@ -79,7 +80,7 @@ const useStyles = makeStyles({
     marginTop: "64px",
     backgroundColor: "#EAEDED",
     padding: "5rem 2rem 2rem",
-    minHeight: "86.3vh",
+    minHeight: "88.15vh",
     width: "100%",
     textAlign: "center",
   },

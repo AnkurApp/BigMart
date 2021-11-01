@@ -6,12 +6,12 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/footer";
 import SellCard from "../Components/sellproductCard";
 import { getFavProducts, getProducts } from "../Redux/Actions/productActions";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   mainContainer: {
     marginTop: "64px",
     width: "100%",
-    // backgroundColor: "#EAEDED",
   },
 
   adsContainer: {
@@ -20,8 +20,8 @@ const useStyles = makeStyles({
 
   categoryContainer: {
     margin: "1rem 0 2rem",
-    // border: "1px solid black",
-    backgroundColor: "#fff",
+    border: "2px solid #C3073F",
+    borderRadius: "10px",
   },
 
   categoryName: {
@@ -51,7 +51,15 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "0.5rem 2rem",
+    padding: "0.5rem 5rem",
+    borderBottom: "2px solid #C3073F",
+    borderRadius: "10px 10px 0 0",
+    marginBottom: "1rem",
+    backgroundColor: "#F5F5F5",
+  },
+
+  categoryLink: {
+    color: "#C3073F",
   },
 });
 
@@ -91,7 +99,14 @@ export default function HomePage() {
                 <Typography className={classes.categoryName}>
                   {Object.keys(product)[0]}
                 </Typography>
-                <Typography>{"View All"}</Typography>
+                <Link
+                  to={{
+                    pathname: `/BigMart/Category/${Object.keys(product)[0]}`,
+                  }}
+                  className={classes.categoryLink}
+                >
+                  {"View All"}
+                </Link>
               </Box>
 
               <Carousel

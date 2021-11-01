@@ -1,5 +1,7 @@
 import { makeStyles, Box, Typography } from "@material-ui/core";
 import CopyrightIcon from "@material-ui/icons/Copyright";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles({
   footerContainer: {
@@ -16,6 +18,7 @@ const useStyles = makeStyles({
     width: "35%",
     display: "flex",
     alignItems: "center",
+    flexWrap: "wrap",
     justifyContent: "space-between",
   },
 
@@ -24,6 +27,11 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+
+  category: {
+    textTransform: "capitalize",
+    cursor: "pointer",
   },
 
   colorWhite: {
@@ -35,15 +43,19 @@ const useStyles = makeStyles({
 
 export default function Footer() {
   const classes = useStyles();
+  const history = useHistory();
 
   const categories = [
-    "Sofa",
-    "Dining",
-    "Beds",
-    "Wardrobes",
-    "Home Decor",
-    "Kids Furniture",
+    "sofa",
+    "dining",
+    "beds",
+    "wardrobes",
+    "homedecor",
+    "kidsfurniture",
   ];
+
+  const { sellProducts } = useSelector((state) => state.products);
+  // console.log(sellProducts);
   return (
     <Box className={classes.footerContainer}>
       <Typography variant="h5" className={`${classes.colorWhite}`}>
@@ -55,6 +67,7 @@ export default function Footer() {
             <Typography
               key={category}
               className={`${classes.category} ${classes.colorWhite}`}
+              onClick={() => history.push(`/BigMart/${category}`)}
             >
               {category}
             </Typography>

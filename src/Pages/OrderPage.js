@@ -15,6 +15,27 @@ const useStyles = makeStyles({
     minHeight: "88.15vh",
     textAlign: "center",
   },
+
+  orderContainer: {
+    width: "75%",
+    margin: "1.5rem auto 0",
+  },
+
+  emptyContainer: {
+    paddingTop: "5rem",
+    textAlign: "center",
+  },
+
+  button: {
+    margin: "2rem auto 0",
+    letterSpacing: "1px",
+
+    "&:hover": {
+      backgroundColor: "#C3073F",
+      color: "#fff",
+      fontWeight: "bold",
+    },
+  },
 });
 
 export default function UserOrder() {
@@ -30,14 +51,15 @@ export default function UserOrder() {
       dispatch(getUserOrder(auth.uid));
     }
   }, [auth.uid]);
+
   return (
     <>
       <Navbar />
       <Box className={classes.mainContainer}>
         {orders.length > 0 ? (
           <>
-            <Typography variant="h5">{"Your Orders"}</Typography>
-            <Box>
+            <Typography variant="h4">{"Your Orders"}</Typography>
+            <Box className={classes.orderContainer}>
               {orders.map((data, index) => {
                 return <OrderCard data={data} key={index} />;
               })}
@@ -45,7 +67,7 @@ export default function UserOrder() {
           </>
         ) : (
           <Box className={classes.emptyContainer}>
-            <Typography variant="h5">{"Your Favorite is Empty"}</Typography>
+            <Typography variant="h5">{"No Product Here"}</Typography>
             <Button
               variant="outlined"
               color="secondary"

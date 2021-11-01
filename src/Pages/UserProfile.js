@@ -2,209 +2,95 @@ import {
   makeStyles,
   Box,
   Typography,
+  Card,
+  CardContent,
   Avatar,
   Button,
-  Divider,
 } from "@material-ui/core";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "../Components/Navbar";
-import EditProfile from "../Modules/EditProfile";
-
-import AddIcCallIcon from "@material-ui/icons/AddIcCall";
-import AddIcon from "@material-ui/icons/Add";
-import UserPicture from "../Modules/UserDP";
 import UpdateNumber from "../Modules/Updatenumber";
+import Sidebar from "../Components/sidebar";
+import { useHistory } from "react-router";
+import EditDetails from "../Components/editDetails";
+import Footer from "../Components/footer";
 
 const useStyles = makeStyles({
-  mainContainer: {
-    marginTop: "64px",
-    minHeight: "93vh",
-    position: "relative",
+  outerContainer: {
     backgroundColor: "#EAEDED",
   },
 
-  userContainer: {
+  mainContainer: {
+    marginTop: "64px",
+    width: "70%",
+    margin: "auto",
+    minHeight: "88.15vh",
     display: "flex",
+    padding: "2rem 0",
   },
 
-  profileContainer: {
-    width: "20%",
-    position: "absolute",
-    top: "2rem",
-    left: "6%",
-    padding: "1rem 0",
+  userProfileContainer: {
+    width: "100%",
+    height: "100%",
+    marginLeft: "1.5rem",
+    padding: "1rem 2rem",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    border: "2px solid black",
-    boxShadow: "0px 5px 8px rgb(0 0 0 / 0.2)",
   },
 
-  userName: {
-    width: "100%",
-    textAlign: "center",
-    marginTop: "0.8rem",
-  },
-
-  editBtn: {
-    fontSize: "15px",
-    padding: "0.3rem 0.5rem",
-    letterSpacing: "1px",
-
-    "&:hover": {
-      backgroundColor: "#C3073F",
-      color: "#fff",
-    },
-  },
-
-  adsContainer: {
-    width: "80%",
-  },
-
-  avatarContainer: {
-    position: "relative",
-    cursor: "pointer",
-  },
-
-  avatar: {
+  userImage: {
     display: "block",
-    width: "100px",
-    height: "100px",
-  },
-
-  addIcon: {
-    position: "absolute",
-    bottom: "0",
-    right: "0",
-  },
-
-  divider: {
-    width: "100%",
-    height: "2px",
-    margin: "0.7rem 0",
-  },
-
-  contactContainer: {
-    width: "100%",
-    marginTop: "1rem",
-    textAlign: "center",
-  },
-
-  flexContainer: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    margin: "0.5rem 0",
-    padding: "0rem 1rem",
-  },
-
-  contactHeading: {
-    fontWeight: "600",
-
-    backgroundColor: "#DCDCDC",
-    letterSpacing: "1px",
+    width: "20%",
+    height: "200px",
+    backgroundSize: "contain",
     marginBottom: "1rem",
   },
 
-  detailsData: {
-    marginLeft: "0.5rem",
-    fontSize: "17px",
-    fontWeight: "550",
+  cardContent: {
+    width: "100%",
+    marginTop: "2rem",
+    padding: "0 2rem",
   },
 
-  detailsHeading: {
-    fontSize: "17px",
+  heading: {
+    fontWeight: "bold",
+    margin: "0.5rem",
   },
 });
 
 export default function UserProfile() {
   const classes = useStyles();
   const auth = useSelector((state) => state.auth);
+  const history = useHistory();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [dpModalOpen, setDPModalOpen] = useState(false);
-  const [numberModalOpen, setNumberModalOpen] = useState(false);
   return (
-    <Box className={classes.mainContainer}>
+    <Box className={classes.outerContainer}>
       <Navbar />
 
-      <Box className={classes.userContainer}>
-        <Box className={classes.profileContainer}>
-          <Box
-            className={classes.avatarContainer}
-            onClick={() => setDPModalOpen(true)}
-          >
-            {auth.photoURL ? (
-              <Avatar src={auth.photoURL} className={classes.avatar} />
-            ) : (
-              <Avatar className={classes.avatar} />
-            )}
-            <AddIcon fontSize={"large"} className={classes.addIcon} />
-          </Box>
+      <Box className={classes.mainContainer}>
+        <Sidebar />
 
-          <Typography variant="h5" className={classes.userName}>
-            {auth.name}
-          </Typography>
-
-          <Divider className={classes.divider} />
-
+        <Card className={classes.userProfileContainer}>
+          <Avatar src={auth.photoURL} className={classes.userImage} />
           <Button
-            className={classes.editBtn}
-            variant={"outlined"}
-            color="secondary"
-            onClick={() => setModalOpen(true)}
+            variant="contained"
+            color="primary"
+            onClick={() => history.push("/Bigmart/user/userpicture")}
           >
-            {"Edit Profile"}
+            {"Change Profile Picture"}
           </Button>
 
-          {/* <Divider className={classes.divider} /> */}
-
-          <Box className={classes.contactContainer}>
-            <Typography variant="h6" className={classes.contactHeading}>
-              {"Contact"}
+          <CardContent className={classes.cardContent}>
+            <Typography variant="h5" className={classes.heading}>
+              {"Personal Information"}
             </Typography>
 
-            <Box className={classes.flexContainer}>
-              <Typography className={classes.detailsHeading}>
-                {"Email: "}
-              </Typography>
-              <Typography className={classes.detailsData}>
-                {auth.email}
-              </Typography>
-            </Box>
-
-            {auth.phoneNo ? (
-              <Box className={classes.flexContainer}>
-                <Typography className={classes.detailsHeading}>
-                  {"Contact Number:"}
-                </Typography>
-                <Typography className={classes.detailsData}>
-                  {auth.phoneNo}
-                </Typography>
-              </Box>
-            ) : (
-              <Button
-                variant="outlined"
-                color="primary"
-                startIcon={<AddIcCallIcon />}
-                style={{ padding: "0.5rem 1.5rem" }}
-                onClick={() => setNumberModalOpen(true)}
-              >
-                {"Add Mobile Number"}
-              </Button>
-            )}
-          </Box>
-        </Box>
+            <EditDetails />
+          </CardContent>
+        </Card>
       </Box>
-
-      <EditProfile modalOpen={modalOpen} setModalOpen={setModalOpen} />
-      <UserPicture dpmodalOpen={dpModalOpen} setDPModalOpen={setDPModalOpen} />
-      <UpdateNumber
-        modalOpen={numberModalOpen}
-        setModalOpen={setNumberModalOpen}
-      />
+      <Footer />
     </Box>
   );
 }

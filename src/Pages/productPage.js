@@ -5,8 +5,9 @@ import {
   Card,
   Avatar,
   Button,
+  Breadcrumbs,
 } from "@material-ui/core";
-import { useLocation } from "react-router";
+import { useLocation, useParams } from "react-router";
 import Navbar from "../Components/Navbar";
 import SimpleImageSlider from "react-simple-image-slider";
 
@@ -14,19 +15,31 @@ import { database } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, addToFavorite, numberFormat } from "../Redux/Actions/productActions";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import {
+  addToCart,
+  addToFavorite,
+  numberFormat,
+} from "../Redux/Actions/productActions";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notify } from "../Components/notify";
+import { Link } from "react-router-dom";
+import Footer from "../Components/footer";
 
 const useStyles = makeStyles({
-  productContainer: {
+  mainContainer: {
     marginTop: "64px",
     padding: "2rem 10rem",
+    minHeight: "88.15vh",
+    backgroundColor: "#EAEDED",
+  },
+
+  productContainer: {
+    marginTop: "1.5rem",
     display: "flex",
     justifyContent: "space-between",
-    backgroundColor: "#EAEDED",
   },
 
   detailsContainer: {
@@ -84,6 +97,12 @@ const useStyles = makeStyles({
       border: "none",
     },
   },
+
+  nameSection: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
 
 export default function ProductPage() {
@@ -93,6 +112,9 @@ export default function ProductPage() {
   const productData = location.state;
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  const { category, product } = useParams();
+  console.log(category, product);
 
   const imageArray = [
     { url: productData.Image1 },
@@ -131,71 +153,92 @@ export default function ProductPage() {
   return (
     <>
       <Navbar />
-      <Box className={classes.productContainer}>
-        <SimpleImageSlider
-          width={900}
-          height={550}
-          slideDuration={0.3}
-          showBullets={true}
-          showNavs={true}
-          navSize={30}
-          navStyle={2}
-          images={imageArray}
-        />
+      <Box className={classes.mainContainer}>
+        <Breadcrumbs>
+          <Link to={{ pathname: "/BigMart" }}>{"Home"}</Link>
 
-        <Box className={classes.detailsContainer}>
-          <Card className={classes.productCard}>
-            <Typography variant="h6">
-            {numberFormat(productData.productPrice)}
-            </Typography>
-            <Typography variant="h6">{productData.productTitle}</Typography>
-            <Typography>{productData.productDesc}</Typography>
-          </Card>
+          <Link
+            to={{ pathname: `/BigMart/${category}` }}
+            style={{ textTransform: "capitalize" }}
+          >
+            {category}
+          </Link>
 
-          <Card className={classes.sellerCard}>
-            <Typography variant="h6" style={{ textAlign: "center" }}>
-              {"Seller Description"}
-            </Typography>
-            <Box className={classes.flexBox}>
-              {sellerImage ? (
-                <Avatar src={sellerImage} className={classes.avatar} />
-              ) : (
-                <Avatar {...stringAvatar(`${productData.userName}`)} />
-              )}
-              <Typography className={classes.userName}>
-                {productData.userName}
+          <Typography style={{ color: "#C3073F" }}>{product}</Typography>
+        </Breadcrumbs>
+
+        <Box className={classes.productContainer}>
+          <SimpleImageSlider
+            width={900}
+            height={550}
+            slideDuration={0.3}
+            showBullets={true}
+            showNavs={true}
+            navSize={30}
+            navStyle={2}
+            images={imageArray}
+          />
+
+          <Box className={classes.detailsContainer}>
+            <Card className={classes.productCard}>
+              <Typography variant="h6">
+                {numberFormat(productData.productPrice)}
               </Typography>
-            </Box>
+              <Typography variant="h6">{productData.productTitle}</Typography>
+              <Typography>{productData.productDesc}</Typography>
+            </Card>
 
-            <Box className={classes.userDetails}>
-              <Typography>{productData.phoneNo}</Typography>
-              <Typography>{productData.sellerCity}</Typography>
-            </Box>
-          </Card>
+            <Card className={classes.sellerCard}>
+              <Typography variant="h6" style={{ textAlign: "center" }}>
+                {"Seller Description"}
+              </Typography>
+              <Box className={classes.nameSection}>
+                <Box className={classes.flexBox}>
+                  {sellerImage ? (
+                    <Avatar src={sellerImage} className={classes.avatar} />
+                  ) : (
+                    <Avatar {...stringAvatar(`${productData.userName}`)} />
+                  )}
+                  <Typography className={classes.userName}>
+                    {productData.userName}
+                  </Typography>
+                </Box>
 
-          <Box className={classes.btnGroup}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              className={classes.btn}
-              onClick={addFavorite}
-            >
-              {"Add to Favorites"}
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              className={classes.btn}
-              onClick={addCart}
-            >
-              {"Add to Cart"}
-            </Button>
+                <ArrowForwardIosIcon />
+              </Box>
+
+              <Box className={classes.userDetails}>
+                <Typography>{productData.phoneNo}</Typography>
+                <Typography>{productData.sellerCity}</Typography>
+              </Box>
+            </Card>
+
+            <Box className={classes.btnGroup}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                className={classes.btn}
+                onClick={addFavorite}
+              >
+                {"Add to Favorites"}
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                className={classes.btn}
+                onClick={addCart}
+              >
+                {"Add to Cart"}
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Box>
+
+      <Footer />
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

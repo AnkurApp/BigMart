@@ -37,8 +37,8 @@ export default function ProductDetailsForm() {
             id="productCategory"
             label="Select Category"
             variant="outlined"
+            required
             className={classes.inputField}
-           
             {...field}
           >
             <MenuItem value="sofa">{"Sofa"}</MenuItem>
@@ -59,6 +59,7 @@ export default function ProductDetailsForm() {
             id="productTitle"
             label="Product Title"
             variant="outlined"
+            required
             placeholder="
             Mention the key features of your item (e.g. brand, model, age, type)"
             className={classes.inputField}
@@ -78,6 +79,7 @@ export default function ProductDetailsForm() {
             id="productDesc"
             label="Product Description"
             variant="outlined"
+            required
             placeholder="Include condition, features and reason for selling"
             className={classes.inputField}
             {...field}
@@ -96,6 +98,7 @@ export default function ProductDetailsForm() {
             id="productPrice"
             label="Price"
             variant="outlined"
+            required
             placeholder="Enter Product Price"
             className={classes.inputField}
             {...field}

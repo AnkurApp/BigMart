@@ -33,8 +33,7 @@ const useStyles = makeStyles({
     height: "35%",
     padding: "0.5rem 1rem",
     borderBottom: "3px solid #C3073F",
-    // borderLeft: "3px solid #C3073F",
-    // borderRight: "3px solid #C3073F",
+
   },
 
   flexContainer: {

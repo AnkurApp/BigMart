@@ -3,9 +3,12 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
   onIdTokenChanged,
+  updatePassword,
+  updateEmail,
+  deleteUser,
 } from "firebase/auth";
 import { auth as dbAuth, database, storage } from "../../firebase";
-import { set, ref, update, onValue } from "firebase/database";
+import { set, ref, update, onValue, remove } from "firebase/database";
 
 import { ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -17,6 +20,7 @@ import {
   USER_EDIT,
   USER_DP,
   UPDATE_NUMBER,
+  UPDATE_CITY,
 } from "./actionNames";
 
 export const register = (user) => {
@@ -172,5 +176,60 @@ export const updateNumber = (auth, number) => {
       type: UPDATE_NUMBER,
       payLoad: { number },
     });
+  };
+};
+
+export const updateCity = (auth, city) => {
+  return (dispatch) => {
+    update(ref(database, `Users/${auth.uid}`), {
+      city,
+    });
+
+    dispatch({
+      type: UPDATE_CITY,
+      payLoad: { city },
+    });
+  };
+};
+
+export const changePassword = (newpass) => {
+  return () => {
+    updatePassword(dbAuth.currentUser, newpass)
+      .then(() => {
+        console.log("Password Updated");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+};
+
+export const changeEmail = (newEmail) => {
+  return () => {
+    updateEmail(dbAuth.currentUser, newEmail)
+      .then(() => {
+        console.log("Email Updated");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+};
+
+export const deleteAccount = (uid) => {
+  return () => {
+    deleteUser(dbAuth.currentUser)
+      .then(() => {
+        console.log("User Deleted");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    localStorage.clear();
+    remove(ref(database, `Users/${uid}`));
+    remove(ref(database, `Cart/${uid}`));
+    remove(ref(database, `Favorite/${uid}`));
+    remove(ref(database, `Order/${uid}`));
+    remove(ref(database, `Products/${uid}`));
   };
 };

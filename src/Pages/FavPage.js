@@ -43,7 +43,7 @@ const useStyles = makeStyles({
   },
 
   cardContainer: {
-    minHeight: "350px",
+    height: "350px",
     padding: "1rem 1rem 0",
     borderLeft: "5px solid #C3073F",
     borderRight: "5px solid #C3073F",
@@ -99,6 +99,15 @@ const useStyles = makeStyles({
       fontWeight: "bold",
     },
   },
+
+  heading: {
+    textAlign: "center",
+    fontSize: "30px",
+    color: "#C3073F",
+    textTransform: "uppercase",
+    fontWeight: "bold",
+    letterSpacing: "1px",
+  },
 });
 
 export default function UserFavorite() {
@@ -136,7 +145,9 @@ export default function UserFavorite() {
       <Box className={classes.mainContainer}>
         {favorite.length > 0 ? (
           <>
-            <Typography variant="h5">{"Your Favorites"}</Typography>
+            <Typography className={classes.heading}>
+              {"Your Favorites"}
+            </Typography>
 
             <Box className={classes.favContainer}>
               {favorite.map((data, index) => {

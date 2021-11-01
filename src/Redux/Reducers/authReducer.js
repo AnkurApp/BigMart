@@ -1,6 +1,7 @@
 import {
   GET_USERDATA,
   UPDATE_NUMBER,
+  UPDATE_CITY,
   USER_DP,
   USER_EDIT,
   USER_LOGIN_FAILURE,
@@ -84,6 +85,13 @@ export default function authReducer(state = initialState, action) {
       state = {
         ...state,
         phoneNo: action.payLoad.number,
+      };
+      break;
+    }
+    case UPDATE_CITY: {
+      state = {
+        ...state,
+        city: action.payLoad.city,
       };
       break;
     }

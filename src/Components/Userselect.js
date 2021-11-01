@@ -28,6 +28,10 @@ const useStyles = makeStyles({
     padding: "0.65rem 1rem",
     borderBottom: "1px solid #F5F5F5",
     backgroundColor: "#fff",
+
+    "&:hover": {
+      backgroundColor: "#F5F5F5",
+    },
   },
 
   link: {
@@ -62,7 +66,7 @@ export default function UserSelect() {
         <List style={{ margin: "0", padding: "0" }}>
           <ListItem className={classes.listItem}>
             <NavLink to={"/BigMart/user"} className={classes.link}>
-              {"Your Profile"}
+              {"Your Account"}
             </NavLink>
           </ListItem>
 

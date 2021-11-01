@@ -13,6 +13,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { useState } from "react";
 import AddProduct from "../Modules/Addproduct";
 import UserSelect from "./Userselect";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles({
   navbar: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles({
     fontSize: "23px",
     fontWeight: "bold",
     letterSpacing: "1px",
+    cursor: "pointer",
   },
 
   btn: {
@@ -81,16 +83,21 @@ const useStyles = makeStyles({
 
 export default function Navbar() {
   const classes = useStyles();
+  const history = useHistory();
 
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
       <AppBar
         position="fixed"
-        style={{ backgroundColor: "#C3073F", zIndex: "100" }}
+        style={{ backgroundColor: "#C3073F", zIndex: "1300" }}
       >
         <Toolbar className={classes.navbar}>
-          <Typography variant="h6" className={classes.appName}>
+          <Typography
+            variant="h6"
+            className={classes.appName}
+            onClick={() => history.push("/BigMart")}
+          >
             {"BigMart"}
           </Typography>
 

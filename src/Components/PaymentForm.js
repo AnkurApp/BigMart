@@ -5,7 +5,14 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import {
+  CardElement,
+  useElements,
+  useStripe,
+  // CardNumberElement,
+  // CardCvcElement,
+  // CardExpiryElement,
+} from "@stripe/react-stripe-js";
 import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -86,13 +93,6 @@ const useStyles = makeStyles({
     animationFillMode: "forwards",
     willChange: "opacity, transform",
   },
-
-  // payCard: {
-  //   "& ._PrivateStripeElement": {
-  //     display: "flex !important",
-  //     flexDirection: "column",
-  //   },
-  // },
 });
 
 const CARD_OPTIONS = {
@@ -101,12 +101,13 @@ const CARD_OPTIONS = {
     base: {
       iconColor: "#c4f0ff",
       color: "#000",
+      margin: "0.5rem",
       fontWeight: "500",
       fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
       fontSize: "16px",
       fontSmoothing: "antialiased",
       ":-webkit-autofill": { color: "#fce883" },
-      "::placeholder": { color: "#87bbfd" },
+      "::placeholder": { color: "#D5D5D5" },
     },
     invalid: {
       iconColor: "#ffc7ee",
@@ -206,23 +207,10 @@ export default function PaymentForm() {
         dispatch(addToOrder(auth.uid, data, paymentMethod));
         dispatch(removeFromSell(data.productCategory, data.itemId));
       });
-
     } else {
       console.log(error.message);
       setError(error);
     }
-
-    // if (error) {
-    //   setError(error);
-    // } else {
-    //   setPaymentMethod(paymentMethod);
-    //   dispatch(removeUserCart(auth.uid));
-
-    //   cart.map((data) => {
-    //     dispatch(addToOrder(auth.uid, data, paymentMethod));
-    //     dispatch(removeFromSell(data.productCategory, data.itemId));
-    //   });
-    // }
   };
 
   return (
@@ -288,6 +276,9 @@ export default function PaymentForm() {
                     setError(e.error);
                   }}
                 />
+                {/* <CardNumberElement options={CARD_OPTIONS} />
+                <CardCvcElement options={CARD_OPTIONS} />
+                <CardExpiryElement options={CARD_OPTIONS} /> */}
               </Box>
             </fieldset>
             {error && <ErrorMessage>{error.message}</ErrorMessage>}

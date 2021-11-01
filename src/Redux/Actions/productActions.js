@@ -6,6 +6,7 @@ import {
   GET_CART_ITEMS,
   GET_FAV_ITEMS,
   GET_ORDER_ITEMS,
+  GET_CATEGORYDATA,
 } from "./actionNames";
 
 export const getUserProduct = (uid) => {
@@ -57,6 +58,24 @@ export const getProducts = () => {
   };
 };
 
+export const getCategoryProduct = (category) => {
+  return (dispatch) => {
+    const dbRef = ref(database, `Sell/${category}`);
+
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      const categoryData = [];
+
+      data &&
+        Object.values(data).forEach((item) => {
+          categoryData.push(item);
+        });
+
+      dispatch({ type: GET_CATEGORYDATA, payLoad: categoryData });
+    });
+  };
+};
+
 export const addToCart = (uid, productData) => {
   return () => {
     set(ref(database, `Cart/${uid}/${productData.itemId}`), {
@@ -94,6 +113,12 @@ export const removeFromFav = (uid, itemId) => {
 export const removeFromSell = (category, itemId) => {
   return () => {
     remove(ref(database, `Sell/${category}/${itemId}`));
+  };
+};
+
+export const removeFromProduct = (uid, category, itemId) => {
+  return () => {
+    remove(ref(database, `Products/${uid}/${category}/${itemId}`));
   };
 };
 
